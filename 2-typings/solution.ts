@@ -57,8 +57,9 @@ const TENTHS_LESS_THAN_HUNDRED: string[] = [
  * @param {boolean} [asOrdinal] - Deprecated, use toWordsOrdinal() instead!
  * @returns {string}
  */
-function toWords(number: string, asOrdinal: boolean): string {
+function toWords(number: number | string, asOrdinal?: boolean): string {
     let words: string;
+    if (typeof number === "number") number = number.toString();
     const num: number = parseInt(number, 10);
 
     if (!isFinite(num)) {
@@ -71,10 +72,9 @@ function toWords(number: string, asOrdinal: boolean): string {
     return asOrdinal ? makeOrdinal(words) : words;
 }
 
-function generateWords(number: number): string {
+function generateWords(number: number, words?: string[]): string {
     let remainder: number,
-        word: string,
-        words: string[] = arguments[1];
+        word: string = arguments[1];
 
     // We’re done
     if (number === 0) {
@@ -119,6 +119,8 @@ function generateWords(number: number): string {
     } else if (number <= MAX) {
         remainder = number % ONE_QUADRILLION;
         word = generateWords(Math.floor(number / ONE_QUADRILLION)) + " quadrillion,";
+    } else {
+        word = "Exceeds maximum";
     }
 
     words.push(word);
